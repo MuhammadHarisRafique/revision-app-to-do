@@ -8,18 +8,64 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+    var a: Int = 0
+    var fruitList = ["Mango", "Orange", "Grapes", "Apple"]
+  
 
+    @IBOutlet weak var taskTableView: UITableView!
+    @IBOutlet weak var taskTextBox: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        taskTableView.dataSource = self
+        taskTableView.delegate = self
+     
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+      
+  }
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       return fruitList.count
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell")! as UITableViewCell
+        cell.textLabel?.text = fruitList[indexPath.row]
+        return cell
+        
+    }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        a = indexPath.row
+        taskTextBox.text = fruitList[indexPath.row]
+        
     }
 
+    @IBAction func btnAddAction(sender: AnyObject) {
+        if taskTextBox.text != ""
+        {
+            fruitList.append(taskTextBox.text!)
+            taskTableView.reloadData()
+            taskTextBox.text = ""
+        }
+        
+    }
+    @IBAction func btnUpdate(sender: AnyObject) {
+        if taskTextBox.text != ""
+        {
+            fruitList[a] = taskTextBox.text!
+            taskTableView.reloadData()
+            taskTextBox.text = ""
+        }
+        
+    }
 
+    @IBAction func btnDelete(sender: AnyObject) {
+        fruitList.removeAtIndex(a)
+        taskTableView.reloadData()
+        taskTextBox.text = ""
+        
+    }
 }
 
